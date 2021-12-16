@@ -91,6 +91,7 @@ void repl_execute_command(struct char_buff * buffer) {
 
 void repl_print_board(game *game, int player, char_buff * buffer) {
     player_info player_info = game->players[player];
+
     cb_append(buffer, "battleBit.........\n");
     cb_append(buffer, "-----[ ENEMY ]----\n");
     repl_print_hits(&player_info, buffer);
@@ -101,6 +102,46 @@ void repl_print_board(game *game, int player, char_buff * buffer) {
 }
 
 void repl_print_ships(player_info *player_info, char_buff *buffer) {
+
+    //printf("AKLDJSLKJDKLAJD\n");
+
+    // For all of the spaces on the board
+    cb_append(buffer, "  0 1 2 3 4 5 6 7 \n");
+    // Column
+    for (int y = 0; y < 8; ++y){
+        cb_append_int(buffer, y);
+
+        //int pos = 0;
+        for (int x = 0; x < 8; ++x){
+            unsigned long long int mask = xy_to_bitval(x, y);
+            // Bitmask of player
+            player_info->ships;
+            if (mask & player_info->ships) {
+                cb_append(buffer, " *");
+                //strcat(str,"X");
+                //printf("X");
+                //str[x] = 'X';
+                //pos += sprintf(&str[pos], ", X%d", x);
+            } else {
+                cb_append(buffer, "  ");
+                //strcat(str, ".");
+                //printf(".");
+                //pos += sprintf(&str[pos], ", .%d", x);
+                //str[x] = '.';
+            }
+        }
+        cb_append(buffer, " \n");
+
+
+    }
+
+        // Check bitmask of board against bitmask of players ship
+        // If there is a ship there, add 'X' to string
+        // Otherwise add '.'
+        //cb_append(buffer, str)
+
+
+
     // Step 3 - Implement this to print out the visual ships representation
     //  for the console.  You will need to use bit masking for each position
     //  to determine if a ship is at the position or not.  If it is present
@@ -114,4 +155,44 @@ void repl_print_hits(struct player_info *player_info, struct char_buff *buffer) 
     // hits and shots values in the players game struct.  If a shot was fired at
     // a given spot and it was a hit, print 'H', if it was a miss, print 'M'.  If
     // no shot was taken at a position, print a space character ' '
-}
+
+
+    cb_append(buffer, "  0 1 2 3 4 5 6 7 \n");
+    // Column
+    for (int y = 0; y < 8; ++y){
+        // Row
+        cb_append_int(buffer, y);
+
+        int pos = 0;
+        for (int x = 0; x < 8; ++x){
+            // Bit mask of coordinate
+            unsigned long long int mask = xy_to_bitval(x, y);
+            // Bitmask of player's ships
+            player_info->ships;
+            // Bitmask of
+            player_info->shots;
+
+            // If there is a ship there and there was a shot there
+            if ((mask & player_info->shots)) {
+                if (mask & player_info->ships){
+                    cb_append(buffer, " H");
+                }
+                else{
+                    cb_append(buffer, " M");
+                }
+            }
+            else {
+                cb_append(buffer, "  ");
+
+                }
+            }
+
+        cb_append(buffer, " \n");
+        }
+
+
+    }
+
+
+
+

@@ -48,7 +48,13 @@ void server_broadcast(char_buff *msg) {
 int run_server() {
     // STEP 7 - implement the server code to put this on the network.
     // Here you will need to initalize a server socket and wait for incoming connections.
-    //
+    int sockfd;
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd == -1){
+        printf("socket creation failed\n");
+        exit(0);
+    }
+
     // When a connection occurs, store the corresponding new client socket in the SERVER.player_sockets array
     // as the corresponding player position.
     //
@@ -59,4 +65,13 @@ int run_server() {
 int server_start() {
     // STEP 6 - using a pthread, run the run_server() function asynchronously, so you can still
     // interact with the game via the command line REPL
+    pthread_t thread1, thread2;
+
+    pthread_create(&thread1, NULL, &run_server, NULL);
+
+    pthread_create(&thread2, NULL, &run_server, NULL);
+
+    pthread_join( thread1, NULL);
+    pthread_join(thread2, NULL);
+    exit(0);
 }

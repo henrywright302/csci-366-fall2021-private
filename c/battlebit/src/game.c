@@ -29,11 +29,65 @@ void game_init_player_info(player_info *player_info) {
 }
 
 int game_fire(game *game, int player, int x, int y) {
+
+
+    player_info *playerFiring = &game->players[player];
+    unsigned long long int mask = xy_to_bitval(x,y);
+    playerFiring->shots;
+    if (mask & playerFiring->shots){
+
+    }
+    else {
+        playerFiring->shots = playerFiring->shots | mask;
+    }
+
+    player_info *playerBeingFiredAt;
+    if (player == 1){
+        playerBeingFiredAt = &game->players[0];
+    }
+    else {
+        playerBeingFiredAt = &game->players[1];
+    }
+
+    // Test ship value using mask to see if opponent has ship
+    if (playerBeingFiredAt->ships & playerFiring->shots){
+        // update playerFiring using OR
+        playerFiring->hits = playerFiring->hits | mask;
+        // " " using XOR
+        playerBeingFiredAt->ships = playerBeingFiredAt->ships ^ mask;
+        if (player == 1){
+            game->status = PLAYER_0_TURN;
+            if (playerBeingFiredAt->ships == 0){
+                    game->status = PLAYER_1_WINS;
+
+            }
+
+        }
+        else {
+            game->status = PLAYER_1_TURN;
+            if (playerBeingFiredAt->ships == 0){
+                game->status = PLAYER_0_WINS;
+
+            }
+
+    }
+
+        return 1;
+
+    }
+
+
+
+   return 0;
+
+
+
+    //ayerFiring->hits;
     // Step 5 - This is the crux of the game.  You are going to take a shot from the given player and
     // update all the bit values that store our game state.
     //
     //  - You will need up update the players 'shots' value
-    //  - you You will need to see if the shot hits a ship in the opponents ships value.  If so, record a hit in the
+    //  - You will need to see if the shot hits a ship in the opponents ships value.  If so, record a hit in the
     //    current players hits field
     //  - If the shot was a hit, you need to flip the ships value to 0 at that position for the opponents ships field
     //
@@ -60,6 +114,8 @@ unsigned long long int xy_to_bitval(int x, int y) {
     }
 
     unsigned long long int mask = 1ull;
+    /** Step 1 - DONE */
+
     mask = mask << (y * 8);
     mask = mask << x;
 
@@ -86,6 +142,12 @@ struct game * game_get_current() {
 }
 
 int game_load_board(struct game *game, int player, char * spec) {
+    /** Step 2 - Done */
+    player_info *playerGoing = &game->players[player];
+    if (player == 1){
+        game->status = PLAYER_0_TURN;
+    }
+
     // look at spec. If it is valid...
     if (spec == NULL){
         //printf("Spec is null\n");
